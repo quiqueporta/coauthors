@@ -6,7 +6,7 @@ Add coauthors to your last git commit message.
 To install **coauthors**, just run:
 
 ```sh
-$ sudo pip install coauthors
+$ sudo python3 -m pip install coauthors
 ```
 
 ## Configure
