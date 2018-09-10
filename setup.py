@@ -1,5 +1,4 @@
 from setuptools import setup
-from pipenv import find_install_requires
 from coauthors import __version__
 
 setup(name='coauthors',
