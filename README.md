@@ -33,7 +33,7 @@ Example ~/.coauthors.json:
 Then you need to create an environment variable
 
 ```sh
-COAUTHORS_FILE="~/.coauthors.json"
+COAUTHORS_FILE="/home/<user>/.coauthors.json"
 ```
 
 ## Usage
