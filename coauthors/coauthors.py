@@ -61,7 +61,7 @@ def _add_coauthors_to_last_commit(available_coauthors, coauthors):
         branch.commit = commit.parents[0]
 
         message = _get_cleaned_commit_message(commit.message)
-        new_message = _add_coauthors_to_message(message)
+        new_message = _add_coauthors_to_message(message, available_coauthors, coauthors)
 
         repo.index.commit(new_message)
 
@@ -92,7 +92,7 @@ def _get_cleaned_commit_message(commit_message):
     return message
 
 
-def _add_coauthors_to_message(message):
+def _add_coauthors_to_message(message, available_coauthors, coauthors):
     for coauthor in coauthors:
         selected_coauthor = available_coauthors[coauthor]
 
