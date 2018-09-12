@@ -48,7 +48,6 @@ def _add_coauthors_to_last_commit(available_coauthors, coauthors):
         repo = Repo(os.getcwd())
     except InvalidGitRepositoryError as e:
         print(Colors.FAIL + "You need to be in the git root folder." + Colors.ENDC)
-        branch.commit = commit
 
     no_changes_commited = len(repo.index.diff(None)) > 0
     if no_changes_commited:
