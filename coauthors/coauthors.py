@@ -3,7 +3,7 @@ import json
 import os
 import sys
 
-from git import Repo
+from git import Repo, InvalidGitRepositoryError
 
 
 class Colors:
@@ -44,42 +44,60 @@ def _load_available_coauthors():
         return data
 
 def _add_coauthors_to_last_commit(available_coauthors, coauthors):
-    repo = Repo(os.getcwd())
+    try:
+        repo = Repo(os.getcwd())
+    except InvalidGitRepositoryError as e:
+        print(Colors.FAIL + "You need to be in the git root folder." + Colors.ENDC)
+        branch.commit = commit
 
-    no_changes_commited = len(repo.untracked_files) > 0 or len(repo.index.diff(None)) > 0
+    no_changes_commited = len(repo.index.diff(None)) > 0
     if no_changes_commited:
         print(Colors.FAIL + "You have uncommited changes." + Colors.ENDC)
         return
 
-    branch = repo.head.reference
-    commit = repo.head.commit
-    branch.commit = commit.parents[0]
-
-    new_message = ""
-    lines = commit.message.split("\n")
-    for line in lines:
-        if not line:
-            continue
-        if "Co-authored-by" in line:
-            continue
-        new_message += "{}\n".format(line)
-
-    new_message += "\n"
-
     try:
-        for coauthor in coauthors:
-            selected_coauthor = available_coauthors[coauthor]
+        branch = repo.head.reference
+        commit = repo.head.commit
+        branch.commit = commit.parents[0]
 
-            new_message += "Co-authored-by: {} <{}>\n".format(selected_coauthor['name'], selected_coauthor['email'])
+        message = _get_cleaned_commit_message(commit.message)
+        new_message = _add_coauthors_to_message(message)
 
         repo.index.commit(new_message)
 
         print(Colors.WARNING + "Remember to `push` your amended commit." + Colors.ENDC)
 
-    except KeyError as key:
-        print(Colors.FAIL + "The coauthor {} does not exists.".format(key) + Colors.ENDC)
+    except KeyError as e:
+        print(Colors.FAIL + "The coauthor {} does not exists.".format(e) + Colors.ENDC)
         print(Colors.OKBLUE + "Use --list to show available coauthors" + Colors.ENDC)
         branch.commit = commit
+    except Exception as e:
+        print(Colors.FAIL + "Some error happened: {}".format(e) + Colors.ENDC)
+        branch.commit = commit
+
+
+def _get_cleaned_commit_message(commit_message):
+    message = ""
+    lines = commit_message.split("\n")
+
+    for line in lines:
+        if not line:
+            continue
+        if "Co-authored-by" in line:
+            continue
+        message += "{}\n".format(line)
+
+    message += "\n"
+
+    return message
+
+
+def _add_coauthors_to_message(message):
+    for coauthor in coauthors:
+        selected_coauthor = available_coauthors[coauthor]
+
+        message += "Co-authored-by: {} <{}>\n".format(selected_coauthor['name'], selected_coauthor['email'])
+    return message
 
 
 def _get_env_setting(setting):
