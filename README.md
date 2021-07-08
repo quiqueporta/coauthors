@@ -30,10 +30,10 @@ Example ~/.coauthors.json:
 }
 ```
 
-Then you need to create an environment variable
+Then add the following line to your sources file (.bashrc, .zshrc, ...):
 
 ```sh
-COAUTHORS_FILE="/home/<user>/.coauthors.json"
+export COAUTHORS_FILE="/home/<user>/.coauthors.json"
 ```
 
 ## Usage
