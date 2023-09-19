@@ -6,7 +6,7 @@ Add coauthors to your last git commit message.
 To install **coauthors**, just run:
 
 ```sh
-$ sudo python3 -m pip install coauthors # for protected env --break-system-packages
+$ sudo python3 -m pip install coauthors # for system wide pip --break-system-packages
 ```
 
 ## Configure
@@ -33,7 +33,7 @@ Example ~/.coauthors.json:
 Then add the following line to your sources file (.bashrc, .zshrc, ...):
 
 ```sh
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH" # for system wide pip
 export COAUTHORS_FILE="/home/<user>/.coauthors.json"
 ```
 
